@@ -19,7 +19,7 @@ Requires: requests, beautifulsoup4, Pillow (>=9.4), pypdf
 - Saves original HTTP headers (Last-Modified, ETag, Server...) per file
 - Resumable: rerun and it picks up where it left off
 
-Usage: python wayback_grab.py [domain] [outdir]
+Usage: python wayback_grab.py <domain> [outdir]
 """
 import hashlib
 import io
@@ -41,8 +41,10 @@ from PIL import ExifTags, Image, IptcImagePlugin
 from pypdf import PdfReader
 
 # ---------------------------------------------------------------- config
-DOMAIN = (sys.argv[1] if len(sys.argv) > 1 else "mdvaden.com").lower()
-OUT = Path(sys.argv[2] if len(sys.argv) > 2 else "mdvaden_archive")
+if len(sys.argv) < 2:
+    sys.exit("Usage: python wayback_grab.py <domain> [outdir]")
+DOMAIN = sys.argv[1].lower()
+OUT = Path(sys.argv[2] if len(sys.argv) > 2 else "wayback_archive")
 WORKERS = 4              # keep low; archive.org rate-limits aggressively
 MAX_RETRIES = 6
 CDX = "https://web.archive.org/cdx/search/cdx"
